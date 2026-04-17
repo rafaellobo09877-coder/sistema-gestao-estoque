@@ -5,15 +5,13 @@ const app = express();
 
 app.use(express.json());
 
-// rota teste (IMPORTANTE)
+// 🔥 GARANTE QUE FUNCIONA
 app.get('/health', (req, res) => {
   res.json({ ok: true });
 });
 
-// suas rotas
 app.use('/api', routes);
 
-// porta correta pro Render
 const PORT = process.env.PORT || 3333;
 
 app.listen(PORT, () => {
