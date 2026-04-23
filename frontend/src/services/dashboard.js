@@ -1,6 +1,5 @@
 import { api } from "./api";
 
-export async function getDashboard(month, year) {
-  const response = await api.get(`/dashboard?month=${month}&year=${year}`);
-  return response.data;
-}
+export const getDashboard = (month, year) => {
+  return api.get(`/dashboard?month=${month}&year=${year}`);
+};
