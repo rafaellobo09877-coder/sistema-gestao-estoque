@@ -1,6 +1,6 @@
 import { prisma } from "../lib.js";
 
-export const getMovements = async (req, res) => {
+export const getDashboard = async (req, res) => {
   try {
     const { month, year } = req.query;
 
@@ -10,12 +10,13 @@ export const getMovements = async (req, res) => {
           gte: new Date(year, month - 1, 1),
           lte: new Date(year, month, 0)
         }
-      },
-      include: { product: true },
-      orderBy: { movementDate: "desc" }
+      }
     });
 
-    res.json(movements);
+    res.json({
+      totalSaidas: movements.length,
+      movimentos: movements
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -1,6 +1,6 @@
 import { prisma } from "../lib.js";
 
-export const getStock = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
     const products = await prisma.product.findMany();
     res.json(products);

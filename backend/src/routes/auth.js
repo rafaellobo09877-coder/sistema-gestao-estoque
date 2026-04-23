@@ -5,9 +5,7 @@ import { prisma } from "../lib.js";
 
 const router = Router();
 
-// ==================
 // REGISTER
-// ==================
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -22,17 +20,13 @@ router.post("/register", async (req, res) => {
       }
     });
 
-    res.json({ msg: "Usuário criado", user });
-
+    res.json(user);
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: error.message });
   }
 });
 
-// ==================
 // LOGIN
-// ==================
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -42,25 +36,21 @@ router.post("/login", async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
+      return res.status(404).json({ error: "Usuário não encontrado" });
     }
 
-    const ok = await bcrypt.compare(password, user.passwordHash);
+    const valid = await bcrypt.compare(password, user.passwordHash);
 
-    if (!ok) {
-      return res.status(401).json({ erro: "Senha inválida" });
+    if (!valid) {
+      return res.status(401).json({ error: "Senha inválida" });
     }
 
-    const token = jwt.sign(
-      { id: user.id },
-      "SEGREDO",
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign({ id: user.id }, "SEGREDO", {
+      expiresIn: "1d"
+    });
 
     res.json({ token });
-
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: error.message });
   }
 });
