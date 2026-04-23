@@ -3,18 +3,20 @@ import prisma from '../prisma/client.js';
 
 export async function importMonthly(req, res) {
   try {
+    // valida arquivo
     if (!req.file) {
       return res.status(400).json({ error: 'Arquivo não enviado' });
     }
 
+    // lê Excel
     const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     let data = xlsx.utils.sheet_to_json(sheet, { header: 1 });
 
-    // 🔥 pula o cabeçalho da sua planilha
+    // pula cabeçalho (ajuste se precisar)
     data = data.slice(13);
 
-    // 🔥 CRIA O IMPORT DO MÊS (ESSENCIAL)
+    // cria registro do mês
     const stockImport = await prisma.stockImport.create({
       data: {
         referenceMonth: new Date().getMonth() + 1,
@@ -26,28 +28,32 @@ export async function importMonthly(req, res) {
     let count = 0;
 
     for (const row of data) {
-      const itemCode = row[1];
-      const material = row[2];
+      const itemCode = String(row[1] || '').trim();
+      const material = String(row[2] || '').trim();
       const quantidade = row[22];
 
+      // ignora linha vazia
       if (!itemCode || !material) continue;
 
-      const qty = Number(quantidade) || 0;
+      // 🔥 CORREÇÃO DO EXCEL (IMPORTANTE)
+      const qty = parseFloat(
+        String(quantidade || '0').replace(',', '.')
+      ) || 0;
 
-      // 🔥 cria ou atualiza produto
+      // cria ou atualiza produto
       const product = await prisma.product.upsert({
-        where: { itemCode: String(itemCode) },
+        where: { itemCode },
         update: {},
         create: {
-          itemCode: String(itemCode),
-          materialName: String(material),
+          itemCode,
+          materialName: material,
         },
       });
 
-      // 🔥 salva no estoque mensal (CORRETO PRO SEU BANCO)
+      // salva estoque
       await prisma.monthlyStock.create({
         data: {
-          importId: stockImport.id,   // 🔥 obrigatório
+          importId: stockImport.id,
           productId: product.id,
           availableQty: qty,
           totalQty: qty,
@@ -63,7 +69,7 @@ export async function importMonthly(req, res) {
     });
 
   } catch (err) {
-    console.error(err);
-    return res.status(400).json({ error: 'Erro ao processar planilha' });
+    console.log('🔥 ERRO REAL:', err);
+    return res.status(500).json({ error: 'Erro ao processar planilha' });
   }
 }
