@@ -66,7 +66,7 @@ http://localhost:5173
 
 ## 📸 Preview
 
-### Dashboard do sistema
+### Sistema completo com importação de Excel e visualização em tempo real:
 
 ![Dashboard](./dashboard.png)
 
