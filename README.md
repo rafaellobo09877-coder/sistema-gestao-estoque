@@ -1,59 +1,47 @@
-# Sistema de Controle de Estoque do Setor
+# Sistema de Gestão de Estoque
 
-Projeto pronto para controlar o estoque mensal do seu setor com:
+Sistema web completo para controle de estoque com importação de dados, registro de movimentações e visualização em tempo real.
 
-- importação automática de Excel
-- estoque base por mês
-- lançamentos diários de saída e entrada
-- dashboard moderno
-- saldo atual calculado automaticamente
+## 🚀 Tecnologias
 
-## Arquitetura
+* React + Vite
+* Tailwind CSS
+* Node.js + Express
+* Prisma ORM
+* SQLite
 
-- **Frontend:** React + Vite + Tailwind via CDN + Recharts
-- **Backend:** Node.js + Express
-- **Banco:** Prisma + SQLite
+## 📊 Funcionalidades
 
-> Escolhi SQLite nesta versão para ficar realmente pronto para rodar no seu PC sem depender de instalar PostgreSQL. Se você quiser, depois eu adapto para PostgreSQL sem mudar o fluxo do sistema.
+* Importação automática de planilha Excel
+* Cadastro e controle de produtos
+* Registro de entradas e saídas
+* Cálculo automático de saldo
+* Dashboard com visão geral do estoque
 
-## Fluxo real do sistema
+## 🔄 Fluxo do Sistema
 
-1. Todo mês você importa a planilha oficial.
-2. O sistema grava esse arquivo como estoque base do mês.
-3. Durante o mês você registra apenas as movimentações.
-4. O sistema calcula o saldo atual sozinho.
+1. Importação da planilha mensal
+2. Armazenamento do estoque base
+3. Registro das movimentações ao longo do mês
+4. Atualização automática do saldo
 
-## Estrutura
+## ▶️ Como rodar o projeto
 
-```txt
-estoque-setor-pronto/
-  backend/
-  frontend/
-  README.md
-```
-
-## Como rodar
-
-### 1) Backend
+### Backend
 
 ```bash
 cd backend
-copy .env.example .env
+cp .env.example .env
 npm install
 npx prisma generate
 npx prisma db push
 npm run dev
 ```
 
-Backend ficará em:
-
-```bash
+Backend rodando em:
 http://localhost:3333
-```
 
-### 2) Frontend
-
-Em outro terminal:
+### Frontend
 
 ```bash
 cd frontend
@@ -61,40 +49,21 @@ npm install
 npm run dev
 ```
 
-Frontend ficará em:
-
-```bash
+Frontend rodando em:
 http://localhost:5173
-```
 
-## Importação do Excel
+## 📸 Preview
 
-A planilha esperada é no formato parecido com a que você enviou, contendo cabeçalhos como:
+(Adicionar imagens aqui)
 
-- Item
-- Material
-- U.M.
-- Finalidade de Compra
-- Diretoria
-- Saldo Reserva
-- Disponível
-- Total
-- Validade
+## 📌 Objetivo
 
-## Endpoints principais
+Projeto desenvolvido com foco em simular um sistema real utilizado para gestão de estoque em ambientes corporativos.
 
-- `GET /api/dashboard?month=4&year=2024`
-- `GET /api/stock/current?month=4&year=2024`
-- `GET /api/products`
-- `POST /api/imports/monthly`
-- `GET /api/movements?month=4&year=2024`
-- `POST /api/movements`
+## 🔧 Próximas melhorias
 
-## Próximas melhorias
+* Autenticação de usuários
+* Geração de relatórios (PDF/Excel)
+* Filtros avançados
+* Alertas de estoque mínimo
 
-- autenticação real com login
-- exportar relatório PDF/Excel
-- filtro por diretoria
-- limite de saída conforme saldo
-- alerta visual por estoque mínimo configurável
-- deploy em servidor
